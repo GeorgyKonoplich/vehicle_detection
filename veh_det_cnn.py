@@ -9,6 +9,7 @@ from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
+import random
 
 batch_size = 5
 nb_classes = 1
@@ -22,12 +23,25 @@ nb_filters = 80
 # size of pooling area for max pooling
 nb_pool = 2
 
-images = imageproc.list_pictures('data')
-list_images = [imageproc.img_to_array(imageproc.load_img(x)) for x in images]
-X_train = np.array(list_images)
-#X_train /= 255
-Y_train = np.ones(X_train.shape[0])
-print(Y_train)
+true_images = imageproc.list_pictures('data')
+list_true_images = [imageproc.img_to_array(imageproc.load_img(x)) for x in true_images]
+false_images = imageproc.list_pictures('data_false')
+list_false_images = [imageproc.img_to_array(imageproc.load_img(x)) for x in false_images]
+true_labels = [1.] * len(true_images)
+false_labels = [0.] * len(false_images)
+images =  list_true_images + list_false_images
+labels = true_labels + false_labels
+data = [(images[i], labels[i]) for i in range(len(images))]
+
+random.shuffle(data)
+N_train = int(0.8 * len(data))
+
+train = data[:N_train]
+test = data[N_train:]	
+X_train = np.array([x[0] for x in train])
+Y_train = np.array([x[1] for x in train])
+X_test = np.array([x[0] for x in test])
+Y_test = np.array([x[1] for x in test])
 
 model = Sequential()
 
@@ -85,8 +99,11 @@ else:
     model.fit_generator(datagen.flow(X_train, Y_train,
                         batch_size=batch_size),
                         samples_per_epoch=X_train.shape[0],
-                        nb_epoch=nb_epoch)
+                        nb_epoch=nb_epoch,
+                        validation_data=(X_test, Y_test))
 
-
+score = model.evaluate(X_test, Y_test, verbose=0)
+print('Test score:', score[0])
+print('Test accuracy:', score[1])
 
 
