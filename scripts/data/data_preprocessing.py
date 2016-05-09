@@ -3,10 +3,11 @@ np.random.seed(1337)  # for reproducibility
 from keras.preprocessing import image as imageproc
 import pandas as pd
 
+path_to_raw_data = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/data/raw/"
 
-true_images = imageproc.list_pictures('data')
+true_images = imageproc.list_pictures(path_to_raw_data + "data_true/")
 list_true_images = [imageproc.img_to_array(imageproc.load_img(x)) for x in true_images]
-false_images = imageproc.list_pictures('data_false')
+false_images = imageproc.list_pictures(path_to_raw_data + "data_false/")
 list_false_images = [imageproc.img_to_array(imageproc.load_img(x)) for x in false_images]
 
 # this will do preprocessing and realtime data augmentation
@@ -46,5 +47,5 @@ data = [(images[i], labels[i]) for i in range(len(images))]
 data_train = np.array(images)
 target_train = np.array(labels)
 
-np.save("train_data", data_train)
-np.save("train_target", target_train)
+np.save("/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/data/processed/train_data_new", data_train)
+np.save("/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/data/processed/train_target_new", target_train)

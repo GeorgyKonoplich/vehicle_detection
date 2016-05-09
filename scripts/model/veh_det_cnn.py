@@ -1,15 +1,16 @@
+import pickle
+from keras.models import model_from_json
 import numpy as np
 np.random.seed(1337)
 from keras.optimizers import SGD
 from keras.models import Sequential
-from keras.layers.core import Dense, Dropout, Activation, Flatten
+from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
-import pandas as pd
 import sklearn.cross_validation as cv
 
 batch_size = 5
 nb_classes = 1
-nb_epoch = 20
+nb_epoch = 1000
 
 # input image dimensions
 img_rows, img_cols = 48, 48
@@ -18,9 +19,9 @@ nb_filters = 80
 # size of pooling area for max pooling
 nb_pool = 2
 
-
-train_data = np.load("train_data.npy")
-target = np.load("train_target.npy")
+path = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/dnn"
+train_data = np.load("/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/data/processed/train_data_new.npy")
+target = np.load("/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/data/processed/train_target_new.npy")
 
 X_train, X_test, Y_train, Y_test = cv.train_test_split(train_data, target, test_size=0.2, random_state=23)
 
@@ -61,3 +62,12 @@ score = model.evaluate(X_test, Y_test, verbose=0)
 
 print('Test score:', score[0])
 print('Test accuracy:', score[1])
+
+def save_neural_network(nn, save_to):
+    w_path = ".".join(save_to.split(".")[:-1]) + ".hdf5"
+    pickle.dump([nn.to_json(), w_path], open(save_to, 'wb'))
+    nn.save_weights(w_path, overwrite=True)
+
+
+save_neural_network(model, path)
+
