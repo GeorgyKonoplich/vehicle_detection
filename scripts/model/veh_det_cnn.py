@@ -8,9 +8,9 @@ from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 import sklearn.cross_validation as cv
 
-batch_size = 5
+batch_size = 10
 nb_classes = 1
-nb_epoch = 1000
+nb_epoch = 50
 
 # input image dimensions
 img_rows, img_cols = 48, 48
@@ -19,9 +19,12 @@ nb_filters = 80
 # size of pooling area for max pooling
 nb_pool = 2
 
-path = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/dnn"
-train_data = np.load("/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/data/processed/train_data_new.npy")
-target = np.load("/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/data/processed/train_target_new.npy")
+path_to_project = "C:/workspace/ml/vehicle_detection/" #windows"
+
+path_to_save_models = path_to_project + "/models/dnnnew"
+
+train_data = np.load(path_to_project + "data/processed/train_data_new.npy")
+target = np.load(path_to_project + "data/processed/train_target_new.npy")
 
 X_train, X_test, Y_train, Y_test = cv.train_test_split(train_data, target, test_size=0.2, random_state=23)
 
@@ -74,5 +77,5 @@ def save_neural_network(nn, save_to):
     pickle.dump([nn.to_json(), nn.get_weights()], open(save_to, 'wb'))
 
 
-save_neural_network(model, path)
+save_neural_network(model, path_to_save_models)
 

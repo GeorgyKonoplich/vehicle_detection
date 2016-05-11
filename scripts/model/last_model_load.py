@@ -7,9 +7,10 @@ from sklearn.metrics import r2_score
 import sklearn.cross_validation as cv
 
 
-path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/"
+#path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/" #ubuntu
+path_to_project = "C:/workspace/ml/vehicle_detection/" #windows"
 
-path_to_model = path_to_project + "dnn";
+path_to_model = path_to_project + "/models/dnnnew";
 
 path_to_train_data = path_to_project + "data/processed/train_data_new.npy";
 path_to_target_data = path_to_project + "data/processed/train_target_new.npy";
@@ -22,8 +23,7 @@ X_train, X_test, Y_train, Y_test = cv.train_test_split(train_data, target, test_
 def load_neural_network(file_from):
     (nn_arch, nn_weights_path) = pickle.load(open(file_from, 'rb'))
     nn = model_from_json(nn_arch)
-    nn.load_weights(nn_weights_path)
-    #nn.set_weights(nn_weights_path)
+    nn.set_weights(nn_weights_path)
     return nn
 
 
