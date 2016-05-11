@@ -7,14 +7,16 @@ import pickle
 from keras.models import model_from_json
 from keras.optimizers import SGD
 
+#path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/" #ubuntu
+path_to_project = "C:/workspace/ml/vehicle_detection/" #windows"
+
+path_to_model = path_to_project + "/models/dnn"
 
 #if (len(sys.argv) == 3):
-path_to_photo = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/scripts/model/photo.jpg"#sys.argv[1]
+path_to_photo = path_to_project + "scripts/main/photo.jpg"#sys.argv[1]
 
 path2 = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/scripts/model/image.jpg"#sys.argv[1]
 
-path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/"
-path_to_model = path_to_project + "dnn";
 
 print(path_to_photo)
 
