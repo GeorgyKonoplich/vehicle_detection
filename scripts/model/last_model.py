@@ -23,7 +23,9 @@ def load_neural_network(file_from):
     (nn_arch, nn_weights_path) = pickle.load(open(file_from, 'rb'))
     nn = model_from_json(nn_arch)
     nn.load_weights(nn_weights_path)
+    #nn.set_weights(nn_weights_path)
     return nn
+
 
 model = load_neural_network(path_to_model)
 

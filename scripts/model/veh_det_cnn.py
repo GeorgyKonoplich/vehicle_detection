@@ -63,10 +63,15 @@ score = model.evaluate(X_test, Y_test, verbose=0)
 print('Test score:', score[0])
 print('Test accuracy:', score[1])
 
+'''
 def save_neural_network(nn, save_to):
     w_path = ".".join(save_to.split(".")[:-1]) + ".hdf5"
     pickle.dump([nn.to_json(), w_path], open(save_to, 'wb'))
     nn.save_weights(w_path, overwrite=True)
+'''
+
+def save_neural_network(nn, save_to):
+    pickle.dump([nn.to_json(), nn.get_weights()], open(save_to, 'wb'))
 
 
 save_neural_network(model, path)
