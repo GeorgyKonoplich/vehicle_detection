@@ -8,9 +8,9 @@ from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 import sklearn.cross_validation as cv
 
-batch_size = 10
+batch_size = 5
 nb_classes = 1
-nb_epoch = 50
+nb_epoch = 30
 
 # input image dimensions
 img_rows, img_cols = 48, 48
@@ -33,7 +33,7 @@ model = Sequential()
 
 model.add(Convolution2D(nb_filters, 7, 7,
                         border_mode='valid',
-                        input_shape=(3, img_rows, img_cols)))
+                        input_shape=(1, img_rows, img_cols)))
 model.add(Activation('sigmoid'))
 
 model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
