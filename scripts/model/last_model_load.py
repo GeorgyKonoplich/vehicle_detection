@@ -2,7 +2,7 @@ import pickle
 from keras.models import model_from_json
 import numpy as np
 np.random.seed(1337)
-from keras.optimizers import SGD
+from keras.optimizers import SGD, Adadelta
 from sklearn.metrics import r2_score
 import sklearn.cross_validation as cv
 
@@ -30,8 +30,9 @@ def load_neural_network(file_from):
 model = load_neural_network(path_to_model)
 
 sgd = SGD(lr=0.001, decay=0, momentum=0, nesterov=True)
+adadelta = Adadelta(lr=1.0, rho=0.95, epsilon=1e-08)
 model.compile(loss='binary_crossentropy',
-              optimizer=sgd,
+              optimizer=adadelta,
               metrics=['accuracy'])
 
 print(r2_score(Y_test, model.predict(X_test)))

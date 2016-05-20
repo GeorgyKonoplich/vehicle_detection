@@ -32,13 +32,13 @@ datagen = imageproc.ImageDataGenerator(
 
 true_images = np.array(list_true_images)
 datagen.fit(true_images)
-for j in range(10):
+for j in range(15):
     images_transform = [datagen.standardize(datagen.random_transform(x)) for x in true_images]
     list_true_images += images_transform
 
 false_images = np.array(list_false_images)
 datagen.fit(false_images)
-for j in range(10):
+for j in range(150):
     images_transform = [datagen.standardize(datagen.random_transform(x)) for x in false_images]
     list_false_images += images_transform
 

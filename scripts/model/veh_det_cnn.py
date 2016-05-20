@@ -2,15 +2,16 @@ import pickle
 from keras.models import model_from_json
 import numpy as np
 np.random.seed(1337)
-from keras.optimizers import SGD
+import keras
+from keras.optimizers import SGD, Adadelta 
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 import sklearn.cross_validation as cv
 
-batch_size = 5
+batch_size = 20
 nb_classes = 1
-nb_epoch = 30
+nb_epoch = 100
 
 # input image dimensions
 img_rows, img_cols = 48, 48
@@ -34,15 +35,18 @@ model = Sequential()
 model.add(Convolution2D(nb_filters, 7, 7,
                         border_mode='valid',
                         input_shape=(1, img_rows, img_cols)))
+model.add(keras.layers.normalization.BatchNormalization())
 model.add(Activation('sigmoid'))
 
 model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
 
 model.add(Convolution2D(nb_filters, 4, 4))
+model.add(keras.layers.normalization.BatchNormalization())
 model.add(Activation('sigmoid'))
 model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
 
 model.add(Convolution2D(nb_filters, 4, 4))
+model.add(keras.layers.normalization.BatchNormalization())
 model.add(Activation('sigmoid'))
 model.add(MaxPooling2D(pool_size=(nb_pool, nb_pool)))
 
@@ -53,9 +57,10 @@ model.add(Dense(1))
 model.add(Activation('sigmoid'))
 
 sgd = SGD(lr=0.001, decay=0, momentum=0, nesterov=True)
+adadelta = Adadelta(lr=1.0, rho=0.95, epsilon=1e-08)
 
 model.compile(loss='binary_crossentropy',
-              optimizer=sgd,
+              optimizer=adadelta,
               metrics=['accuracy'])
 
 model.fit(X_train, Y_train, batch_size=batch_size, nb_epoch=nb_epoch,
