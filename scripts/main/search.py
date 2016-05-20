@@ -15,7 +15,7 @@ path_to_model = path_to_project + "/models/dnnnew"
 #if (len(sys.argv) == 3):
 path_to_photo = path_to_project + "scripts/main/photo.jpg"#sys.argv[1]
 
-path2 = path_to_project + "scripts/main/image3.jpg"#sys.argv[1]
+path2 = path_to_project + "scripts/main/image.jpg"#sys.argv[1]
 
 
 print(path_to_photo)

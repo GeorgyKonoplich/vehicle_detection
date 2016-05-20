@@ -11,7 +11,7 @@ import sklearn.cross_validation as cv
 
 batch_size = 20
 nb_classes = 1
-nb_epoch = 100
+nb_epoch = 15
 
 # input image dimensions
 img_rows, img_cols = 48, 48
