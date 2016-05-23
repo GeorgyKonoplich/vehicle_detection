@@ -20,7 +20,7 @@ nb_filters = 80
 # size of pooling area for max pooling
 nb_pool = 2
 
-path_to_project = "C:/workspace/ml/vehicle_detection/" #windows"
+path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
 path_to_save_models = path_to_project + "/models/dnnnew"
 
