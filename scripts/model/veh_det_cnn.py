@@ -9,9 +9,9 @@ from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 import sklearn.cross_validation as cv
 
-batch_size = 20
+batch_size = 64
 nb_classes = 1
-nb_epoch = 15
+nb_epoch = 200
 
 # input image dimensions
 img_rows, img_cols = 48, 48

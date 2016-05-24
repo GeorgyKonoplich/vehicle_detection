@@ -12,13 +12,13 @@ path_to_project = "C:/workspace/ml/vehicle_detection/" #windows"
 
 path_to_model = path_to_project + "/models/dnnnew";
 
-path_to_train_data = path_to_project + "data/processed/train_data_new.npy";
-path_to_target_data = path_to_project + "data/processed/train_target_new.npy";
+path_to_train_data = path_to_project + "data/processed/for_test/train_data_new.npy";
+path_to_target_data = path_to_project + "data/processed/for_test/train_target_new.npy";
 
 train_data = np.load(path_to_train_data)
 target = np.load(path_to_target_data)
 
-X_train, X_test, Y_train, Y_test = cv.train_test_split(train_data, target, test_size=0.2, random_state=23)
+#X_train, X_test, Y_train, Y_test = cv.train_test_split(train_data, target, test_size=0.2, random_state=23)
 
 def load_neural_network(file_from):
     (nn_arch, nn_weights_path) = pickle.load(open(file_from, 'rb'))
@@ -35,4 +35,4 @@ model.compile(loss='binary_crossentropy',
               optimizer=adadelta,
               metrics=['accuracy'])
 
-print(r2_score(Y_test, model.predict(X_test)))
+print(r2_score(target, model.predict(train_data)))
