@@ -11,7 +11,7 @@ from PIL import Image
 #path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/" #ubuntu
 path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
-path_to_model = path_to_project + "/models/dnn_new"
+path_to_model = path_to_project + "/models/dnn200_64"
 
 path_to_photo = path_to_project + "scripts/main/photo.jpg"#sys.argv[1]
 
@@ -101,10 +101,10 @@ test(model, img_array)
 imgs = get_windows(image, size = [100, 100], step = 50)
 
 #save_photos(imgs, 'res1/')
-imgs = resize_imagearrays(imgs, (48, 48))
+imgs1 = resize_imagearrays(imgs, (48, 48))
 #save_photos(imgs, 'res2/')
 
-arr  = model.predict(imgs)
+arr  = model.predict(imgs1)
 
 mx = 1
 

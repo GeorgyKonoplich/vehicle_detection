@@ -10,10 +10,10 @@ import sklearn.cross_validation as cv
 #path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/" #ubuntu
 path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
-path_to_model = path_to_project + "/models/dnnnew";
+path_to_model = path_to_project + "/models/dnn200_64";
 
-path_to_train_data = path_to_project + "data/processed/for_test/train_data_new.npy";
-path_to_target_data = path_to_project + "data/processed/for_test/train_target_new.npy";
+path_to_train_data = path_to_project + "data/processed/train_data_new.npy";
+path_to_target_data = path_to_project + "data/processed/train_target_new.npy";
 
 train_data = np.load(path_to_train_data)
 target = np.load(path_to_target_data)
