@@ -13,7 +13,7 @@ path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
 path_to_model = path_to_project + "/models/dnn_new"
 
-path_to_photo = path_to_project + "scripts/main/photo1.jpg"#sys.argv[1]
+path_to_photo = path_to_project + "scripts/main/photo.jpg"#sys.argv[1]
 
 path2 = path_to_project + "scripts/main/99.jpg"#sys.argv[1]
 
@@ -68,6 +68,22 @@ def get_windows(image, size = [48, 48], step = 1, factor = 1.4, min_din = 1.5):
 	imgs = np.array(imgs)
 	return imgs
 
+def test(model, img_array):
+	arr1 = img_array[0:1, 0:48, 0:48]
+	img1 = imageproc.img_to_array(imageproc.load_img(path2, grayscale=True))
+	ar2 = []
+	arr4 = np.zeros([1, 48, 48])
+	ar2.append(arr1)
+	ar2.append(img1)
+	ar2.append(arr4)
+
+	ar3 = np.array(ar2)
+	print(ar3.shape)
+	att = model.predict(ar3)
+	for x in att:
+		print("%.4f" % x)
+	
+
 image = load_image(path_to_photo)
 img_array = get_array(image)
 
@@ -79,36 +95,23 @@ model.compile(loss='binary_crossentropy',
               optimizer=sgd,
               metrics=['accuracy'])
 
+test(model, img_array)
+
 
 imgs = get_windows(image, size = [100, 100], step = 50)
 
-save_photos(imgs, 'res1/')
+#save_photos(imgs, 'res1/')
 imgs = resize_imagearrays(imgs, (48, 48))
-save_photos(imgs, 'res2/')
+#save_photos(imgs, 'res2/')
 
 arr  = model.predict(imgs)
 
-mx = 1.0
+mx = 1
 
 cnt = 0
 for x in arr:
 	cnt += 1
-	if mx == x:
+	if mx <= x:
 		get_image(imgs[cnt - 1]).save("ress/" +str(cnt) + ".jpg")
 
-'''
-#x = imageproc.array_to_img(arr).save('aug_11.jpg')
-img1 = imageproc.img_to_array(imageproc.load_img(path2, grayscale=True))
 
-ar2 = []
-arr4 = np.zeros([1, 48, 48])
-
-ar2.append(img1)
-ar2.append(arr4)
-
-ar3 = np.array(ar2)
-print(ar3.shape)
-att = model.predict(ar3)
-for x in att:
-	print("%.4f" % x)
-'''
