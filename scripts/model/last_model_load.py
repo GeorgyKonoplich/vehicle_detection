@@ -8,7 +8,7 @@ import sklearn.cross_validation as cv
 
 
 #path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/" #ubuntu
-path_to_project = "C:/workspace/ml/vehicle_detection/" #windows"
+path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
 path_to_model = path_to_project + "/models/dnnnew";
 
