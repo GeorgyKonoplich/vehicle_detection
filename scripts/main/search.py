@@ -3,25 +3,31 @@ np.random.seed(1337)  # for reproducibility
 from keras.preprocessing import image as imageproc
 import pandas as pd
 import sys
-import pickle
+try:
+    import cPickle as pickle
+except:
+    import pickle
 from keras.models import model_from_json
 from keras.optimizers import SGD
 from PIL import Image
+import json
 
 #path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/" #ubuntu
 path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
-path_to_model = path_to_project + "/models/dnn200_64"
+path_to_model = path_to_project + "/models/dnn1_128"
 
 path_to_photo = path_to_project + "scripts/main/photo.jpg"#sys.argv[1]
 
 path2 = path_to_project + "scripts/main/99.jpg"#sys.argv[1]
 
 def load_neural_network(file_from):
-    (nn_arch, nn_weights_path) = pickle.load(open(file_from, 'rb'))
-    nn = model_from_json(nn_arch)
-    nn.set_weights(nn_weights_path)
-    return nn
+	file1 = open(file_from, 'rb')
+	(nn_arch, nn_weights_path) = pickle.load(file1)
+	file1.close()
+	nn = model_from_json(nn_arch)
+	nn.set_weights(nn_weights_path)
+	return nn
 
 def get_image(x):
 	image = imageproc.array_to_img(x)
