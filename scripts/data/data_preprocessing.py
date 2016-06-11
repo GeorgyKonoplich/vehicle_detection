@@ -38,7 +38,7 @@ for j in range(15):
 
 false_images = np.array(list_false_images)
 datagen.fit(false_images)
-for j in range(150):
+for j in range(30):
     images_transform = [datagen.standardize(datagen.random_transform(x)) for x in false_images]
     list_false_images += images_transform
 

@@ -15,7 +15,7 @@ import json
 #path_to_project = "/home/konoplich/workspace/projects/BloodTranscriptome/scripts/data/vehicle_detection/" #ubuntu
 path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
-path_to_model = path_to_project + "/models/dnn1_128"
+path_to_model = path_to_project + "/models/dnn200_128"
 
 path_to_photo = path_to_project + "scripts/main/photo.jpg"#sys.argv[1]
 
@@ -112,12 +112,13 @@ imgs1 = resize_imagearrays(imgs, (48, 48))
 
 arr  = model.predict(imgs1)
 
-mx = 1
+mx = 0.97
 
 cnt = 0
 for x in arr:
 	cnt += 1
 	if mx <= x:
-		get_image(imgs[cnt - 1]).save("ress/" +str(cnt) + ".jpg")
+		get_image(imgs1[cnt - 1]).save("res/" +str(cnt) + ".jpg")
 
 
+		                                 
