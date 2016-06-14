@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+import codecs
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
 
-
+print(sys.getdefaultencoding())
 '''
 path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
@@ -32,12 +35,28 @@ xx.append(x2)
 xx.append(x3)
 xx.append(x4)
 
-plt.xlabel('Smarts')
-plt.ylabel('Probability')
-plt.title('Histogram of IQ')
+arr = ["DNN", "LBP+SVM", "Adaboost", "HDNN", "SimpleDNN"]
+
+class Foo(object):
+	def __init__(self, name):
+		self.name = name
+  
+	def __str__(self):
+		return 'str: %s' % self.name
+  
+	def __unicode__(self):
+		return 'uni: %s' % self.name.decode('utf-8')
+
+	def __repr__(self):
+		return 'repr: %s' % self.name
+
+
+plt.xlabel("recall rate")
+plt.ylabel("false alarm rate")
+#plt.title('')
 plt.grid(True)
 plt.axis([75, 98, 0, 100])
 for i in range(0, 5):
-    plt.plot(y, xx[i], label='$y = {i}x + {i}$'.format(i=i))
+    plt.plot(y, xx[i], label=arr[i])
 plt.legend(loc='best')
 plt.show()
