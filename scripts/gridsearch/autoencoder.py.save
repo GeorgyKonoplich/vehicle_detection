@@ -1,0 +1,115 @@
+import os
+import pandas as pd
+import numpy as np
+from insdeep.callbacks import LossHistory, FullModelCheckpoint
+from sklearn.metrics import mean_squared_error as mse
+from sklearn.grid_search import ParameterGrid
+from sklearn.metrics import r2_score
+from keras.models import Sequential
+from keras.layers import containers
+from keras.layers.core import Dense, Activation, AutoEncoder,Dropout
+from keras.optimizers import SGD, Adagrad, Adadelta, Adam, RMSprop
+from keras import callbacks as ckbs
+
+class AEGridSearch():
+    def __init__(self, params, log_files_path, output_dim=1, output_activation=None,
+                 batch_size=16, epoch_count=400, score_func = r2_score, patience=150, 
+                 dropout=0.2, loss='mean_squared_error',default_activation='relu', 
+                 default_optimizer = Adadelta()):
+        self.epoch_count = epoch_count
+        self.batch_size = batch_size
+        self.log_files_path = log_files_path
+а        self.createDirectoryIfNotExist(self.log_files_path)
+        self.param_grid = ParameterGrid(params)
+        self.patience = patience
+        self.dropout = dropout
+        self.score_func = score_func
+        self.output_dim = output_dim
+        self.output_activation = output_activation
+        self.default_activation = default_activation
+        self.default_optimizer = default_optimizer
+        self.loss=loss
+        
+    def createDirectoryIfNotExist(self, path):
+        if not os.path.exists(path):
+            os.makedirs(path)
+        
+    def getFileName(self, hSize, act, opt):
+        return str(hSize) + '_' + act + '_' + opt.__class__.__name__
+        
+    def createAutoEncoder(self, hSize, activation, optimizer):
+        ae = Sequential()
+        encoder = Dense(input_dim = self.input_dim, output_dim = hSize, activation=activation)
+        decoder = Dense(input_dim = hSize, output_dim = self.input_dim)
+        ae.add(AutoEncoder(encoder=encoder, decoder=decoder, output_reconstruction=True))
+        ae.compile(loss=self.loss, optimizer=optimizer)
+        return ae
+    
+    def convertToArray(self, X):
+        if (isinstance(X, pd.DataFrame)):
+            X = X.get_values()
+        return X
+    
+    def createCallBacks(self, X_train, y_train, X_test, y_test, filePath):
+        lhae = LossHistory(X_train, y_train, X_test, y_test, filePath, self.score_func)
+        checkpointer = FullModelCheckpoint(monitor='val_loss', filepath=filePath+'.insnn', verbose=0, save_best_only=True)
+        es = ckbs.EarlyStopping(monitor='val_loss', patience=self.patience, verbose=0)
+        return lhae, checkpointer, es
+    
+    def writeInfoToFile(self, lhae, filePath):
+        df = pd.DataFrame()
+        df['train_loss'] = lhae.train_losses
+        df['val_loss'] = lhae.val_losses
+        df['add_val_score'] = lhae.add_val_scores
+        df['add_train_score'] = lhae.add_train_scores
+        df.to_csv(filePath+'.csv', sep=',',index=False)
+        
+    def convertToArray(self, X):
+        if (isinstance(X, pd.DataFrame)):
+            X = X.get_values()
+        return X
+    
+    def check_keys(self, valid_keys):
+        for key in self.param_grid.param_grid[0].keys():
+            if (key not in valid_keys):
+                raise Exception("'%s' is invalid parameter" % (key))
+        
+    def fit(self, X_train, y_train, X_test, y_test):
+        self.input_dim = X_train.shape[1]
+        X_train = self.convertToArray(X_train)
+        X_test = self.convertToArray(X_test)
+        y_train = self.convertToArray(y_train)
+        y_test = self.convertToArray(y_test)
+        print("Start training. Configurations count: %i" % (len(self.param_grid)))
+        i = 1
+        best_score = 0
+        self.check_keys(['hSize','activation','optimizer'])
+        for curParams in self.param_grid:
+            if ('hSize' not in curParams.keys()):
+                raise Exception("'hSize' must be one of the grid parameters")
+            else:
+                hSize = curParams.get('hSize')
+                
+            if ('activation' not in curParams.keys()):
+                activation = self.default_activation
+            else:
+                activation = curParams.get('activation')
+                
+            if ('optimizer' not in curParams.keys()):
+                optimizer = self.default_optimizer
+            else:
+                optimizer = curParams.get('optimizer')
+                
+            filePath = self.log_files_path + self.getFileName(hSize, activation, optimizer)
+            ae = self.createAutoEncoder(hSize, activation, optimizer)
+            lhae, chkp, es = self.createCallBacks(X_train, X_train, X_test, X_test, filePath)
+            ae.fit(X_train, X_train, nb_epoch=self.epoch_count, batch_size=self.batch_size,
+                   validation_data = [X_test, X_test], verbose=2, callbacks=[lhae, chkp, es])
+            cur_score = self.score_func(y_test, ae.predict(X_test))
+            if (cur_score > best_score):
+                best_score = cur_score
+                best_ae = ae
+            self.writeInfoToFile(lhae, filePath)
+            print("Configuration #%i. Completed." % (i))
+            i += 1
+        return best_ae

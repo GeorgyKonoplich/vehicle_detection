@@ -31,6 +31,7 @@ model = load_neural_network(path_to_model)
 
 sgd = SGD(lr=0.001, decay=0, momentum=0, nesterov=True)
 adadelta = Adadelta(lr=1.0, rho=0.95, epsilon=1e-08)
+
 model.compile(loss='binary_crossentropy',
               optimizer=adadelta,
               metrics=['accuracy'])

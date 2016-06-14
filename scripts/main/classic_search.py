@@ -59,40 +59,13 @@ def resize_imagearrays(imgs, size):
 	img_res = np.array(img_res)
 	return img_res
 
-def filtration(imgs, coord, min_dist):
-	x = coord[0]
-	num = 0
-	images = []
-	images.append(imgs[0])
-	for i in range(1, len(imgs)):
-		if abs(coord[i][0] - x[0]) + abs(coord[i][1] - x[1]) > min_dist:
-			x = coord[i]
-			num = i
-			images.append(imgs[num])
-	imgs = np.array(images)
-	return imgs
-
-def geometric_center(img, x, y):
-	m10 = 0
-	m01 = 0
-	m00 = 0
-	for i in range(0, img.shape[1]):
-		for j in range(0, img.shape[2]):
-			m10 += (i ** 1) * (j ** 0) * img[0][i][j]
-			m01 += (i ** 0) * (j ** 1) * img[0][i][j]
-			m00 += (i ** 0) * (j ** 0) * img[0][i][j]
-	xx = int(m10 / m00)
-	yy = int(m01 / m00)
-	return (x + xx, y + yy)
-
-def get_windows(image, size = [48, 48], step = 1, factor = 1.4, min_din = 1.5):
+def get_windows(image, size = [48, 48], step = 1, factor = 1.4):
 	x = 0
 	y = 0
 	imgs = []
 	imgsmax = []
 	imgsmin = []
 	coord = []
-	i = 0
 	img_array = get_array(image)
 	while x + size[0] <= image.size[1]:
 		y = 0
@@ -107,36 +80,13 @@ def get_windows(image, size = [48, 48], step = 1, factor = 1.4, min_din = 1.5):
 			imgsmin.append(img_array[0:1, x:lmin, y:rmin])
 			if lmax < image.size[1] and rmax < image.size[0]:
 				imgsmax.append(img_array[0:1, x:lmax, y:rmax])
-			coord.append(((x + l) / 2, (y + r) / 2 , i * 3))
-			coord.append(((x + lmin) / 2, (y + rmin) / 2 , i * 3 + 1))
-			if lmax < image.size[1] and rmax < image.size[0]:
-				coord.append(((x + lmax) / 2, (y + rmax) / 2 , i * 3 + 2))
-			i += 1
-			(xx, yy) = geometric_center(img_array[0:1, x:l, y:r], x, y)
-			l = xx + size[0]
-			r = yy + size[1]
-			lmin = xx + int(size[0] / factor)
-			rmin = yy + int(size[1] / factor)
-			lmax = xx + int(size[0] * factor)
-			rmax = yy + int(size[1] * factor)
-			if l < image.size[1] and r < image.size[0]:
-				imgs.append(img_array[0:1, xx:l, yy:r])
-				coord.append(((xx + l) / 2, (yy + r) / 2 , i * 3))
-			if lmin < image.size[1] and rmin < image.size[0]:
-				imgsmin.append(img_array[0:1, xx:lmin, yy:rmin])
-				coord.append(((xx + lmin) / 2, (yy + rmin) / 2 , i * 3 + 1))
-			if lmax < image.size[1] and rmax < image.size[0]:
-				imgsmax.append(img_array[0:1, xx:lmax, yy:rmax])
-				coord.append(((xx + lmax) / 2, (yy + rmax) / 2 , i * 3 + 2))
-			i += 1
+			coord.append((x, y))
 			y += step
 		x += step
 	imgs = resize_imagearrays(imgs, (48, 48))
 	imgsmax = resize_imagearrays(imgsmax, (48, 48))
 	imgsmin = resize_imagearrays(imgsmin, (48, 48))
 	imgs = np.concatenate((imgs, imgsmax, imgsmin), axis = 0)
-	print(imgs.shape)
-	imgs = filtration(imgs, coord, min_din) 
 	print(imgs.shape)
 	return imgs
 
@@ -170,8 +120,11 @@ model.compile(loss='binary_crossentropy',
 test(model, img_array)
 
 start_time = time.time()
-imgs = get_windows(image, size = [100, 100], step = 80, min_din = 50)
+imgs = get_windows(image, size = [100, 100], step = 50)
 
+#save_photos(imgs, 'res1/')
+#imgs1 = resize_imagearrays(imgs, (48, 48))
+#save_photos(imgs, 'res2/')
 imgs1 = imgs
 
 arr  = model.predict(imgs1)

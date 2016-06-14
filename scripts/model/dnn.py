@@ -3,7 +3,7 @@ from keras.models import model_from_json
 import numpy as np
 np.random.seed(1337)
 import keras
-from keras.optimizers import SGD, Adadelta 
+from keras.optimizers import Adadelta 
 from keras.models import Sequential
 from keras.layers.core import Dense, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
@@ -62,9 +62,9 @@ def create_model():
 	model.add(Flatten())
 	model.add(Dense(300))
 	model.add(Activation('sigmoid'))
-	model.add(Dense(1))
+	model.add(Dense(nb_classes))
 	model.add(Activation('sigmoid'))
-	sgd = SGD(lr=0.001, decay=0, momentum=0, nesterov=True)
+	
 	adadelta = Adadelta(lr=1.0, rho=0.95, epsilon=1e-08)
 
 	model.compile(loss='binary_crossentropy',
@@ -102,13 +102,6 @@ print(acc)
 np.save("C:/workspace/ml/graduate_work/vehicle_detection/data/processed/acc200_128", acc)
 #print('Test score:', score[0])
 #print('Test accuracy:', score[1])
-
-'''
-def save_neural_network(nn, save_to):
-    w_path = ".".join(save_to.split(".")[:-1]) + ".hdf5"
-    pickle.dump([nn.to_json(), w_path], open(save_to, 'wb'))
-    nn.save_weights(w_path, overwrite=True)
-'''
 
 
 

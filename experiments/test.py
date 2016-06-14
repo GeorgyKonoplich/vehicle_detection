@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
+'''
 path_to_project = "C:/workspace/ml/graduate_work/vehicle_detection/" #windows"
 
 accs = np.load(path_to_project + "data/processed/acc200_128.npy")
@@ -18,3 +18,26 @@ for x in accs:
 	ans += x
 print("accuracy-cv: ", ans/5)
 print(accs)
+'''
+xx = []
+x = np.array([14.5, 6.2, 3.5, 2.1, 1.6])
+x1 = np.array([87.6, 59.2, 43.0, 32.8, 24.5])
+x2 = np.array([91.6, 65.3, 49.1, 40.1, 31.9])
+x3 = np.array([18.5, 7.0, 4.1, 2.2, 1.8])
+x4 = np.array([23.2, 12.1, 7.3, 4.9, 3.7])
+y = np.array([95, 90, 85, 80, 75])
+xx.append(x)
+xx.append(x1)
+xx.append(x2)
+xx.append(x3)
+xx.append(x4)
+
+plt.xlabel('Smarts')
+plt.ylabel('Probability')
+plt.title('Histogram of IQ')
+plt.grid(True)
+plt.axis([75, 98, 0, 100])
+for i in range(0, 5):
+    plt.plot(y, xx[i], label='$y = {i}x + {i}$'.format(i=i))
+plt.legend(loc='best')
+plt.show()
