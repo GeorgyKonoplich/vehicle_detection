@@ -5,3 +5,5 @@ because it is difficult or impossible to find a suitable feature space to solve
 the problem for small objects. 
 
 In this project is presented DNN for vehicle detection
+
+To implement DNN, we used Keras library , written in Python and capable of running on top of either TensorFlow or Theano. 

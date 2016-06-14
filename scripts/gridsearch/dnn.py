@@ -7,7 +7,7 @@ import os
 from sklearn.metrics import r2_score
 from sklearn.grid_search import ParameterGrid
 from sklearn.preprocessing import MinMaxScaler
-from insdeep.callbacks import LossHistory, FullModelCheckpoint
+from callbacks import LossHistory, FullModelCheckpoint
 
 from keras.utils import np_utils
 from sklearn.metrics import mean_squared_error as mse
